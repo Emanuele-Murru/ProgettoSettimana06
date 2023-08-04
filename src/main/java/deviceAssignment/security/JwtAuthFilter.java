@@ -23,7 +23,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 	@Autowired
 	JwtTools jwttools;
 	@Autowired
-	UsersService utenteService;
+	UsersService userService;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -38,7 +38,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 		jwttools.verifyToken(token);
 
 		String id = jwttools.extractSubject(token);
-		User currentUser = utenteService.findById(UUID.fromString(id));
+		User currentUser = userService.findById(UUID.fromString(id));
 
 		UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(currentUser, null,
 				currentUser.getAuthorities());

@@ -55,8 +55,8 @@ public class DeviceController {
 	}
 
 	@PutMapping("/{deviceId}")
-	public Device updateDevice(@PathVariable UUID utenteId, @RequestBody DeviceRequestPayload body) {
-		return deviceService.findByIdAndUpdate(utenteId, body);
+	public Device updateDevice(@PathVariable UUID userId, @RequestBody DeviceRequestPayload body) {
+		return deviceService.findByIdAndUpdate(userId, body);
 	}
 
 	@DeleteMapping("/{deviceId}")
