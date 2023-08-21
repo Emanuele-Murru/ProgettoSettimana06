@@ -3,6 +3,7 @@ package deviceAssignment.devices;
 import java.util.UUID;
 
 import deviceAssignment.users.User;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -24,6 +25,8 @@ public class Device {
 	@Id
 	@GeneratedValue
 	private UUID id;
+	@Convert(converter = Converter.class)
+	private String deviceModel;
 	@Enumerated(EnumType.STRING)
 	private DeviceState deviceState;
 	@Enumerated(EnumType.STRING)

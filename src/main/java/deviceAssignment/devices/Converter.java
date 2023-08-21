@@ -32,10 +32,19 @@ public class Converter implements AttributeConverter<String, String>{
 			throw new RuntimeException();
 		}
 	}
+	
 	@Override
-	public String convertToEntityAttribute(String dbData) {
-		// TODO Auto-generated method stub
-		return null;
+	public String convertToEntityAttribute(String encryptedDeviceModel) {
+		try {
+			Key key = new SecretKeySpec(secret.getBytes(), "AES");
+			
+			Cipher c = Cipher.getInstance(ALGORTITHM);
+			c.init(Cipher.DECRYPT_MODE, key);
+			
+			return new String(c.doFinal(Base64.getDecoder().decode(encryptedDeviceModel)));
+		} catch (Exception e) {
+			throw new RuntimeException();
+		}
 	}
 	
 	
