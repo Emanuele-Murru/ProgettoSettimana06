@@ -2,6 +2,7 @@ package deviceAssignment.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,16 +19,20 @@ import deviceAssignment.userspayloads.UserRequestPayload;
 @RestController
 @RequestMapping("/auth")
 public class JwtAuthController {
-	
+
 	@Autowired
 	UsersService usersService;
 
 	@Autowired
 	JwtTools jwtTools;
+	
+	@Autowired
+	PasswordEncoder bcrypt;
 
 	@PostMapping("/register")
 	@ResponseStatus(HttpStatus.CREATED)
 	public User saveUser(@RequestBody UserRequestPayload body) {
+		body.setPassword(bcrypt.encode(body.getPassword()));
 		User created = usersService.create(body);
 
 		return created;
@@ -38,9 +43,10 @@ public class JwtAuthController {
 
 		User user = usersService.findByEmail(body.getEmail());
 
-		if (body.getPassword().equals(user.getPassword())) {
+		if (bcrypt.matches(body.getPassword(), user.getPassword())) {
 
 			String token = jwtTools.createToken(user);
+			
 			return new ResponseEntity<>(token, HttpStatus.OK);
 
 		} else {
